@@ -1,0 +1,382 @@
+/* ==========================================================================
+   00_common.css — 전역 공통 CSS (완성본)
+   목적: Reset + 전역 팔레트(무채색) + 레이아웃(Grid/Flex) + 간격 유틸리티 + 접근성 헬퍼
+   조건: 미디어쿼리 픽셀값 하드코딩(768px / 1024px), 컴포넌트(버튼/카드 등) 제외
+========================================================================== */
+
+/* -----------------------------------------------------------------------
+   1) 전역 토큰(:root) — 무채색 기본 팔레트 및 스케일
+----------------------------------------------------------------------- */
+:root {
+    /* 색상 - 기본 라이트 테마 */
+    --color-bg: #ECECEC;
+    --color-surface: #FFFFFF;
+    --color-accent: #666666;
+    --color-accent-dark: #333333;
+    --color-text: #333333;
+    --color-text-light: #888888;
+    --color-border: rgba(0,0,0,.12);
+
+    /* 간격 */
+    --space-0: 0rem;
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 1rem;
+    --space-4: 1.5rem;
+    --space-5: 2rem;
+    --space-6: 3rem;
+
+    /* gap */
+    --gap-1: 0.5rem;
+    --gap-2: 0.75rem;
+    --gap-3: 1rem;
+    --gap-4: 1.5rem;
+
+    /* radius / shadow */
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 2px 6px rgba(0,0,0,.08);
+    --shadow-md: 0 8px 24px rgba(0,0,0,.12);
+
+    /* 모션 */
+    --ease: cubic-bezier(.2,.6,.2,1);
+    --dur: .2s;
+
+    /* 컨테이너 */
+    --container: 1120px;
+}
+
+/* =========================
+   2) 테마별 색상
+========================= */
+[data-theme="dark"] {
+    --color-bg: #1E1E1E;
+    --color-surface: #2C2C2C;
+    --color-accent: #FFD700;
+    --color-accent-dark: #FFA500;
+    --color-text: #F5F5F5;
+    --color-text-light: #BBBBBB;
+    --color-border: rgba(255,255,255,.12);
+}
+
+[data-theme="blue"] {
+    --color-bg: #EAF4FF;
+    --color-surface: #FFFFFF;
+    --color-accent: #007BFF;
+    --color-accent-dark: #0056B3;
+    --color-text: #002244;
+    --color-text-light: #336699;
+    --color-border: rgba(0,0,0,.1);
+}
+
+[data-theme="red"] {
+    --color-bg: #FFF1F1;
+    --color-surface: #FFFFFF;
+    --color-accent: #E53935;
+    --color-accent-dark: #B71C1C;
+    --color-text: #3B0D0C;
+    --color-text-light: #7A3D3B;
+    --color-border: rgba(0,0,0,.1);
+}
+
+[data-theme="green"] {
+    --color-bg: #F1FFF7;
+    --color-surface: #FFFFFF;
+    --color-accent: #2E7D32;
+    --color-accent-dark: #1B5E20;
+    --color-text: #0D3320;
+    --color-text-light: #3D6652;
+    --color-border: rgba(0,0,0,.1);
+}
+
+[data-theme="pink"] {
+    --color-bg: #FFE6F0;
+    --color-surface: #FFFFFF;
+    --color-accent: #FF8FAB;
+    --color-accent-dark: #FF4C6D;
+    --color-text: #3B0D0C;
+    --color-text-light: #7A3D3B;
+    --color-border: rgba(0,0,0,.1);
+}
+
+[data-theme="mint"] {
+    --color-bg: #E0FFF4;
+    --color-surface: #FFFFFF;
+    --color-accent: #66D9BF;
+    --color-accent-dark: #1FB28A;
+    --color-text: #0D3320;
+    --color-text-light: #3D6652;
+    --color-border: rgba(0,0,0,.1);
+}
+
+[data-theme="lilac"] {
+    --color-bg: #F3E8FF;
+    --color-surface: #FFFFFF;
+    --color-accent: #CBA6F7;
+    --color-accent-dark: #7B5FFF;
+    --color-text: #3B0D3B;
+    --color-text-light: #7A3D7B;
+    --color-border: rgba(0,0,0,.1);
+}
+
+[data-theme="peach"] {
+    --color-bg: #FFF4E6;
+    --color-surface: #FFFFFF;
+    --color-accent: #FFB997;
+    --color-accent-dark: #FF7F50;
+    --color-text: #4B1D0B;
+    --color-text-light: #A65A44;
+    --color-border: rgba(0, 0, 0, .1);
+}
+/* -----------------------------------------------------------------------
+   2) 라이트 Reset & 베이스 스타일
+----------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; list-style-type: none}
+html, body { height: 100%; }
+
+body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    font-family: "Montserrat", "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg, video, canvas { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; background: transparent; border: none; }
+ul, ol { padding-left: 1.2rem; }
+h1, h2, h3, h4, h5, h6 { margin: 0 0 var(--space-2); line-height: 1.25; }
+p { margin: 0 0 var(--space-3); }
+
+/* 키보드 포커스 가시성 */
+:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* 텍스트 드래그 시 하이라이트 */
+::selection {
+    background: var(--color-accent);
+    color: #fff;
+}
+
+/* -----------------------------------------------------------------------
+   3) 페이지 컨테이너 (.page)
+   - 모바일: 99vw (거의 전체폭)
+   - 태블릿(>=768px): 90vw
+   - PC(>=1024px): 60vw
+----------------------------------------------------------------------- */
+.page {
+    width: 99vw;
+    margin: 0 auto;
+}
+@media (min-width: 768px) {
+    .page { width: 90vw; }
+}
+@media (min-width: 1024px) {
+    .page { width: 60vw; }
+}
+
+/* -----------------------------------------------------------------------
+   4) 레이아웃 유틸리티 (Grid / Flex)
+----------------------------------------------------------------------- */
+/* Grid 컨테이너 및 간격 */
+.grid { display: grid; gap: var(--gap-3); }
+.grid.gap-1 { gap: var(--gap-1); }
+.grid.gap-2 { gap: var(--gap-2); }
+.grid.gap-4 { gap: var(--gap-4); }
+
+/* 2/3 컬럼 프리셋 (모바일 1열 → 태블릿부터 분할) */
+.cols-2 { grid-template-columns: 1fr; }
+.cols-3 { grid-template-columns: 1fr; }
+
+@media (min-width: 768px) {
+    .cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .cols-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Flex 행/간격 (가변 아이템 수에 유리) */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-3);
+}
+.row.gap-1 { gap: var(--gap-1); }
+.row.gap-2 { gap: var(--gap-2); }
+.row.gap-4 { gap: var(--gap-4); }
+
+/* Flex 분할 프리셋 (gap 고려) */
+.col-1-2 { flex: 0 1 calc((100% - var(--gap-3)) / 2); }              /* 2분할 */
+.col-1-3 { flex: 0 1 calc((100% - 2 * var(--gap-3)) / 3); }          /* 3분할 */
+@media (max-width: 767px) {
+    .col-1-2, .col-1-3 { flex-basis: 100%; }                           /* 모바일 1열 */
+}
+
+/* 가운데 고정 폭 컨테이너(선택 사용) */
+.container {
+    width: min(92%, var(--container));
+    margin-inline: auto;
+}
+
+/* -----------------------------------------------------------------------
+   5) 간격 유틸리티 (Margin / Padding)
+   - 규칙: m = margin, p = padding
+           t/r/b/l = top/right/bottom/left
+           x = left+right, y = top+bottom
+           0~6 스케일 완비 (요청: mt-5 포함)
+----------------------------------------------------------------------- */
+/* margin - 전체 */
+.m-0 { margin: var(--space-0) ; }
+.m-1 { margin: var(--space-1) ; }
+.m-2 { margin: var(--space-2) ; }
+.m-3 { margin: var(--space-3) ; }
+.m-4 { margin: var(--space-4) ; }
+.m-5 { margin: var(--space-5) ; }
+.m-6 { margin: var(--space-6) ; }
+
+/* margin - 방향별 */
+.mt-0 { margin-top: var(--space-0) ; }
+.mt-1 { margin-top: var(--space-1) ; }
+.mt-2 { margin-top: var(--space-2) ; }
+.mt-3 { margin-top: var(--space-3) ; }
+.mt-4 { margin-top: var(--space-4) ; }
+.mt-5 { margin-top: var(--space-5) ; }  /* 요청 반영 */
+.mt-6 { margin-top: var(--space-6) ; }
+
+.mr-0 { margin-right: var(--space-0) ; }
+.mr-1 { margin-right: var(--space-1) ; }
+.mr-2 { margin-right: var(--space-2) ; }
+.mr-3 { margin-right: var(--space-3) ; }
+.mr-4 { margin-right: var(--space-4) ; }
+.mr-5 { margin-right: var(--space-5) ; }
+.mr-6 { margin-right: var(--space-6) ; }
+
+.mb-0 { margin-bottom: var(--space-0) ; }
+.mb-1 { margin-bottom: var(--space-1) ; }
+.mb-2 { margin-bottom: var(--space-2) ; }
+.mb-3 { margin-bottom: var(--space-3) ; }
+.mb-4 { margin-bottom: var(--space-4) ; }
+.mb-5 { margin-bottom: var(--space-5) ; }
+.mb-6 { margin-bottom: var(--space-6) ; }
+
+.ml-0 { margin-left: var(--space-0) ; }
+.ml-1 { margin-left: var(--space-1) ; }
+.ml-2 { margin-left: var(--space-2) ; }
+.ml-3 { margin-left: var(--space-3) ; }
+.ml-4 { margin-left: var(--space-4) ; }
+.ml-5 { margin-left: var(--space-5) ; }
+.ml-6 { margin-left: var(--space-6) ; }
+
+/* margin - 축 단위 */
+.mx-0 { margin-left: var(--space-0) ; margin-right: var(--space-0) ; }
+.mx-1 { margin-left: var(--space-1) ; margin-right: var(--space-1) ; }
+.mx-2 { margin-left: var(--space-2) ; margin-right: var(--space-2) ; }
+.mx-3 { margin-left: var(--space-3) ; margin-right: var(--space-3) ; }
+.mx-4 { margin-left: var(--space-4) ; margin-right: var(--space-4) ; }
+.mx-5 { margin-left: var(--space-5) ; margin-right: var(--space-5) ; }
+.mx-6 { margin-left: var(--space-6) ; margin-right: var(--space-6) ; }
+
+.my-0 { margin-top: var(--space-0) ; margin-bottom: var(--space-0) ; }
+.my-1 { margin-top: var(--space-1) ; margin-bottom: var(--space-1) ; }
+.my-2 { margin-top: var(--space-2) ; margin-bottom: var(--space-2) ; }
+.my-3 { margin-top: var(--space-3) ; margin-bottom: var(--space-3) ; }
+.my-4 { margin-top: var(--space-4) ; margin-bottom: var(--space-4) ; }
+.my-5 { margin-top: var(--space-5) ; margin-bottom: var(--space-5) ; }
+.my-6 { margin-top: var(--space-6) ; margin-bottom: var(--space-6) ; }
+
+/* padding - 전체 */
+.p-0 { padding: var(--space-0) ; }
+.p-1 { padding: var(--space-1) ; }
+.p-2 { padding: var(--space-2) ; }
+.p-3 { padding: var(--space-3) ; }
+.p-4 { padding: var(--space-4) ; }
+.p-5 { padding: var(--space-5) ; }
+.p-6 { padding: var(--space-6) ; }
+
+/* padding - 방향별 */
+.pt-0 { padding-top: var(--space-0) ; }
+.pt-1 { padding-top: var(--space-1) ; }
+.pt-2 { padding-top: var(--space-2) ; }
+.pt-3 { padding-top: var(--space-3) ; }
+.pt-4 { padding-top: var(--space-4) ; }
+.pt-5 { padding-top: var(--space-5) ; }
+.pt-6 { padding-top: var(--space-6) ; }
+
+.pr-0 { padding-right: var(--space-0) ; }
+.pr-1 { padding-right: var(--space-1) ; }
+.pr-2 { padding-right: var(--space-2) ; }
+.pr-3 { padding-right: var(--space-3) ; }
+.pr-4 { padding-right: var(--space-4) ; }
+.pr-5 { padding-right: var(--space-5) ; }
+.pr-6 { padding-right: var(--space-6) ; }
+
+.pb-0 { padding-bottom: var(--space-0) ; }
+.pb-1 { padding-bottom: var(--space-1) ; }
+.pb-2 { padding-bottom: var(--space-2) ; }
+.pb-3 { padding-bottom: var(--space-3) ; }
+.pb-4 { padding-bottom: var(--space-4) ; }
+.pb-5 { padding-bottom: var(--space-5) ; }
+.pb-6 { padding-bottom: var(--space-6) ; }
+
+.pl-0 { padding-left: var(--space-0) ; }
+.pl-1 { padding-left: var(--space-1) ; }
+.pl-2 { padding-left: var(--space-2) ; }
+.pl-3 { padding-left: var(--space-3) ; }
+.pl-4 { padding-left: var(--space-4) ; }
+.pl-5 { padding-left: var(--space-5) ; }
+.pl-6 { padding-left: var(--space-6) ; }
+
+/* padding - 축 단위 */
+.px-0 { padding-left: var(--space-0) ; padding-right: var(--space-0) ; }
+.px-1 { padding-left: var(--space-1) ; padding-right: var(--space-1) ; }
+.px-2 { padding-left: var(--space-2) ; padding-right: var(--space-2) ; }
+.px-3 { padding-left: var(--space-3) ; padding-right: var(--space-3) ; }
+.px-4 { padding-left: var(--space-4) ; padding-right: var(--space-4) ; }
+.px-5 { padding-left: var(--space-5) ; padding-right: var(--space-5) ; }
+.px-6 { padding-left: var(--space-6) ; padding-right: var(--space-6) ; }
+
+.py-0 { padding-top: var(--space-0) ; padding-bottom: var(--space-0) ; }
+.py-1 { padding-top: var(--space-1) ; padding-bottom: var(--space-1) ; }
+.py-2 { padding-top: var(--space-2) ; padding-bottom: var(--space-2) ; }
+.py-3 { padding-top: var(--space-3) ; padding-bottom: var(--space-3) ; }
+.py-4 { padding-top: var(--space-4) ; padding-bottom: var(--space-4) ; }
+.py-5 { padding-top: var(--space-5) ; padding-bottom: var(--space-5) ; }
+.py-6 { padding-top: var(--space-6) ; padding-bottom: var(--space-6) ; }
+
+/* -----------------------------------------------------------------------
+   6) 색상/보더 유틸리티
+----------------------------------------------------------------------- */
+.bg-main        { background: var(--color-bg) ; }
+.bg-surface     { background: var(--color-surface) ; }
+.bg-accent      { background: var(--color-accent) ; }
+.bg-accent-dark { background: var(--color-accent-dark) ; }
+
+.text-main      { color: var(--color-text) ; }
+.text-light     { color: var(--color-text-light) ; }
+.text-invert    { color: #fff ; }
+
+.border         { border: 1px solid var(--color-border) ; }
+.border-none    { border: none ; }
+
+.rounded-sm     { border-radius: var(--radius-sm) ; }
+.rounded        { border-radius: var(--radius) ; }
+.rounded-lg     { border-radius: var(--radius-lg) ; }
+.shadow-sm      { box-shadow: var(--shadow-sm) ; }
+.shadow-md      { box-shadow: var(--shadow-md) ; }
+
+/* -----------------------------------------------------------------------
+   7) 접근성 헬퍼
+----------------------------------------------------------------------- */
+.visually-hidden{
+    position: absolute ;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+    border: 0;
+}

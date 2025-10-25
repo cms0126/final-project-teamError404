@@ -1,0 +1,361 @@
+/* ========================================================================
+   도서 사이트 회원가입 폼 스타일 (책 느낌)
+   00_common.css 포함 기준
+   모바일 우선 / 카드 + 그림자 + 작은 아이콘/장식
+========================================================================= */
+:root {
+    --row-gap: 8px;
+    --group-mb: 16px;
+}
+
+
+
+/* 이메일 입력 그룹 전체 행 */
+.email-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;        /* 입력 요소 사이 여백 */
+}
+
+/* @ 기호 강조 */
+.email-row .at {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;         /* 더 진하게 */
+    padding: 0 4px;
+}
+
+/* 도메인 직접입력 필드 숨김 처리 */
+#emailDomainCustom {
+    flex: 1;
+}
+
+/* 이메일 Select 스타일 (기본 input과 동일하게) */
+#emailDomainSelect {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.email-row .at {
+    font-size: 15px;
+    font-weight: 600;
+    color: #555;
+    background: #f2f2f2;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+/* 이메일 행統一 높이 */
+.email-row input,
+.email-row select,
+.email-row .at {
+    height: 44px;              /* 모든 요소 동일 */
+    line-height: 44px;         /* 수직 가운데 */
+    padding: 0 12px;
+    font-size: 15px;
+}
+
+/* @ 기호 스타일 통일 */
+.email-row .at {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #f7f7f7;
+    min-width: 44px;           /* 정사각형 느낌 주기 */
+    font-weight: 600;
+}
+
+
+/* ===== 주소 검색 버튼 ===== */
+.btn-find {
+    padding: 6px 12px;
+    border: 1px solid #5A7A4A;         /* 글벗 초록 계열 */
+    border-radius: 6px;
+    background-color: #fff;
+    color: #5A7A4A;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.addr-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.addr-row input {
+    flex: 1;
+}
+
+.input-group .btn-find {
+    height: 40px;        /* input 높이와 동일 */
+    margin-left: 8px;    /* 우편번호칸 옆 여백 */
+}
+
+.btn-find:hover {
+    background-color: #5A7A4A;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(90, 122, 74, 0.3);
+}
+
+.btn-find:active {
+    transform: scale(0.97);
+}
+
+/* === 주소 그룹 전체를 일반 input-group처럼 간격 통일 === */
+.address-group {
+    margin-bottom: var(--group-mb);  /* 📌 다른 input-group과 동일 간격 */
+}
+
+/* === addr-row 내부 input 통일 === */
+.addr-row {
+    display: flex;
+    align-items: center;
+    gap: var(--row-gap);   /* 📌 동일 gap (8px) 유지 */
+    margin-bottom: var(--row-gap);  /* 📌 각 줄 간 세로 간격 추가 */
+}
+
+/* 마지막 addr-row는 margin 제거 (불필요한 여백 방지) */
+.address-group .addr-row:last-of-type {
+    margin-bottom: 0;
+}
+
+/* readonly input도 다른 input처럼 스타일 유지 */
+.addr-row input[readonly] {
+    background: #fdfdfd;
+    color: #666;
+}
+
+
+
+/* wrapper: 화면 중앙 */
+.signup-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-5);
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f7f7f7 0%, #ececec 100%);
+}
+
+/* 카드 컨테이너 */
+.signup-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--color-surface);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s var(--ease);
+}
+
+.signup-card::before,
+.signup-card::after {
+    content: '';
+    position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(102,102,102,0.05);
+}
+
+.signup-card::before { top: -20px; right: -20px; }
+.signup-card::after { bottom: -20px; left: -20px; }
+
+.signup-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.16);
+}
+
+/* 제목 */
+.signup-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--color-accent-dark);
+    margin-bottom: var(--space-4);
+    letter-spacing: 1px;
+    position: relative;
+}
+
+.signup-title::after {
+    content: '📚';
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: 1.5rem;
+    vertical-align: middle;
+}
+
+/* 오류 메시지 */
+.error-msg {
+    color: var(--color-accent);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: var(--space-3);
+}
+
+/* 입력 그룹 */
+.input-group {
+    margin-bottom: var(--space-3);
+    position: relative;
+}
+
+.signup-form input,
+.signup-form select {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    font-size: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: #fffefc;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s var(--ease);
+}
+
+.signup-form input::placeholder {
+    color: var(--color-text-light);
+}
+
+/* 입력 포커스 장식 */
+.signup-form input:focus,
+.signup-form select:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(102,102,102,0.15);
+}
+
+.input-group::after {
+    content: '✎';
+    position: absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-accent-light, #ccc);
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+/* 성별 + 체크박스 한 줄 정렬 */
+.form-row {
+    display: flex;
+    justify-content: space-between; /* 좌우 분리 */
+    align-items: flex-start;        /* 상단 맞춤 */
+    margin-bottom: var(--space-4);
+}
+
+/* 성별 선택 */
+.select-label {
+    flex: 0 0 40%;
+    display: flex;
+    flex-direction: row; /* 텍스트+박스 한 줄 */
+    align-items: center; /* 세로 가운데 맞춤 */
+    gap: 0.5rem;
+    white-space: nowrap; /* 줄바꿈 방지 */
+}
+
+
+/* 체크박스 그룹 (세로 배치) */
+.checkbox-group {
+    flex: 0 0 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 상단 맞춤 */
+    gap: var(--gap-2);
+}
+
+/* 체크박스 라벨 */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox-label input {
+    margin-right: 0.5rem;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-accent);
+}
+
+.checkbox-label:hover {
+    color: var(--color-accent-dark);
+}
+
+/* 제출 버튼 */
+.submit-btn {
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 1rem 0;
+    width: 100%;
+    background: var(--color-accent);
+    color: #fff;
+    border-radius: var(--radius);
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    transition: all 0.3s var(--ease);
+    position: relative;
+}
+
+.submit-btn::after {
+    content: '→';
+    position: absolute;
+    right: 16px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    transition: transform 0.3s var(--ease);
+}
+
+.submit-btn:hover {
+    background: var(--color-accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+}
+
+.submit-btn:hover::after {
+    transform: translateY(-50%) translateX(4px);
+}
+
+/* 주소 행: input/버튼 완전 동일 높이 + 수직 중앙 */
+.addr-row input,
+.addr-row .btn-find {
+    height: 44px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+/* 버튼은 flex로 가운데 정렬 (line-height 의존 X) */
+.addr-row .btn-find {
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;     /* input과 동일 */
+}
+
+/* 기존 40px 규칙 무력화 (우선순위↑) */
+.input-group .btn-find {
+    height: 44px !important;
+}
+
+.addr-row .btn-find { margin-left: 8px; }
+
+/* 반응형 */
+@media (min-width: 768px) {
+    .signup-card { max-width: 540px; padding: var(--space-6); }
+    .signup-title { font-size: 2.3rem; }
+}
+
+@media (min-width: 1024px) {
+    .signup-card { max-width: 600px; padding: var(--space-6); }
+    .signup-title { font-size: 2.6rem; }
+}

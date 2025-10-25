@@ -1,0 +1,162 @@
+/* --------------------
+  관리자 버튼
+-------------------- */
+.admin-toggle {
+    background: var(--color-accent);  /* 전역 변수 사용 */
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    z-index: 110;
+
+    /* 항상 표시 */
+    position: fixed;       /* relative → fixed로 바꿔 상단 우측 고정 */
+    top: 10px;
+    right: 10px;
+}
+
+/* --------------------
+  관리자 패널
+-------------------- */
+.admin-panel {
+    position: fixed;
+    top: 0;
+    right: -320px;          /* 패널 숨김 상태 */
+    width: 300px;
+    height: 100%;
+    background: var(--color-surface);  /* 투명도 제거 */
+    box-shadow: -4px 0 12px rgba(0,0,0,0.2);
+    padding: 1rem;
+    overflow-y: auto;
+    transition: right 0.3s var(--ease), opacity 0.3s var(--ease);
+    opacity: 1;               /* 완전 불투명 */
+    z-index: 105;
+}
+
+/* 토글 버튼 클릭 시 보이기 */
+.admin-panel.open {
+    right: 0;
+}
+
+/* 관리자 토글 클릭 시 활성화 색상 */
+.admin-toggle.active {
+    background-color: var(--color-accent-dark);
+    color: #fff;
+}
+
+/* 헤딩 */
+.admin-panel h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: var(--color-accent-dark);
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+/* 그룹 */
+.admin-group {
+    margin-bottom: 1.5rem;
+}
+
+.group-title {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: var(--color-accent-dark);
+    border-bottom: 1px solid var(--color-accent);
+    padding-bottom: 0.2rem;
+}
+
+/* 리스트 */
+.admin-group ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.admin-group li a {
+    display: block;
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    margin-bottom: 0.3rem;
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+/* hover 효과 */
+.admin-group li a:hover {
+    background-color: var(--color-accent);
+    color: #fff;
+}
+/*날씨*/
+#weather-dust-header {
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    font-size: 12px;
+    padding: 3px 6px;
+    background-color: rgba(255,255,255,0.9);
+    border-radius: 4px;
+    z-index: 9999;
+    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+}
+
+/* ===== Admin topbar (nav) ===== */
+.ad-topbar{
+    position:sticky; top:0; z-index:2000;
+    background: rgba(255,255,255,.50);
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    border-bottom:1px solid rgba(0,0,0,.08);
+}
+.ad-container{
+    width:min(92%,1280px); margin:0 auto; padding:10px 8px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+}
+.ad-brand{ display:flex; align-items:center; gap:10px; }
+.ad-logo{ width:28px; height:28px; object-fit:contain; }
+.ad-title{ font-weight:700; color:#222; }
+
+.ad-nav{ display:flex; align-items:center; gap:18px; }
+.ad-link{
+    text-decoration:none; color:#222; font-size:.95rem; font-weight:600;
+    padding:8px 10px; border-radius:10px;
+    transition: background .2s ease, color .2s ease;
+}
+.ad-link:hover{ background: rgba(0,0,0,.04); }
+
+.ad-dropdown{ position:relative; }
+.ad-link--dropdown{ display:inline-flex; align-items:center; gap:6px; }
+
+/* dropdown panel */
+.ad-menu{
+    position:absolute; top:calc(100% + 6px); left:0; min-width:220px; padding:8px;
+    background: rgba(255,255,255,.78);
+    border:1px solid rgba(0,0,0,.08); border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    margin:0; list-style:none;
+    opacity:0; visibility:hidden; transform:translateY(-4px);
+    transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+    pointer-events:none; z-index:1000;
+}
+.ad-dropdown:hover .ad-menu,
+.ad-dropdown:focus-within .ad-menu,
+.ad-dropdown.is-open .ad-menu{
+    opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto;
+}
+
+.ad-menu__item{
+    display:block; padding:10px 12px; border-radius:10px; color:#222; white-space:nowrap;
+}
+.ad-menu__item:hover,.ad-menu__item:focus{ background: rgba(0,0,0,.06); outline:none; }
+
+@media (max-width:768px){
+    .ad-container{ padding:8px 10px; }
+    .ad-nav{ gap:12px; }
+    .ad-menu{ min-width:220px;}
+    }
+

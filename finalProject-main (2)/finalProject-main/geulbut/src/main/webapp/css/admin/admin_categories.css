@@ -1,0 +1,372 @@
+/* admin_categories.css — Categories 전용 오버라이드
+   - 범위: body.admin-categories 이하
+   - !important 미사용, 기존 JS/HTML 수정 불필요
+*/
+
+/* =========================
+   1) 검색 버튼: 블랙 고정 (books 동일)
+========================= */
+body.admin-categories .search-form .btn-search {
+    background: #111;
+    color: #fff;
+    border-left: 1px solid var(--color-border);
+}
+body.admin-categories .search-form .btn-search:hover { opacity: 0.92; }
+body.admin-categories .search-form .btn-search:active { opacity: 0.86; }
+
+/* =========================
+   2) 테이블 레이아웃/컬럼폭 (가로 스크롤 최소화)
+========================= */
+body.admin-categories .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+body.admin-categories .admin-categories-table {
+    table-layout: auto;   /* 내용 기반 가변 레이아웃 */
+    width: 100%;
+    min-width: 100%;
+}
+
+/* 행 호버 */
+body.admin-categories .admin-categories-table tbody tr:hover { background: #f6f6f6; }
+
+/* 긴 텍스트 줄바꿈(이름) */
+body.admin-categories .category-name,
+body.admin-categories .t-left {
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* 표 밀도(books와 동일한 컴팩트) */
+body.admin-categories .admin-table th,
+body.admin-categories .admin-table td {
+    padding: 0.38rem 0.56rem; /* 0.40 → 0.38 살짝 압축 */
+    font-size: 0.86rem;
+    vertical-align: middle;
+}
+
+/* 날짜/ID는 한 줄 유지 */
+body.admin-categories .created-at-cell,
+body.admin-categories .category-id {
+    white-space: nowrap;
+}
+
+/* 작업 셀: table-cell 유지 + 한 줄 버튼 */
+body.admin-categories .actions-cell {
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    overflow: visible;
+}
+
+/* 작업 버튼 크기/간격 (books와 동일) */
+body.admin-categories .admin-categories-table .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    line-height: 28px;
+    padding: 0 8px;
+    font-size: 0.86rem;
+    vertical-align: middle;
+}
+body.admin-categories .admin-categories-table .btn + .btn { margin-left: 8px; }
+
+/* =========================
+   3) 버튼 톤(툴바/테이블/모달): 플랫
+   - 글래스 오버레이 제거 + 역할별 텍스트 컬러
+========================= */
+/* toolbar/테이블 영역 유리효과 제거 */
+body.admin-categories .toolbar .btn--liquid-glass::before,
+body.admin-categories .toolbar .btn--liquid-glass::after,
+body.admin-categories .table-scroll .btn--liquid-glass::before,
+body.admin-categories .table-scroll .btn--liquid-glass::after {
+    content: none;
+}
+
+/* 공통 베이스 (툴바/테이블/모달) */
+body.admin-categories #btnAddCategory,
+body.admin-categories .admin-categories-table .btn,
+#categoryModal .modal__footer .btn {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+/* Hover/Active */
+body.admin-categories #btnAddCategory:hover,
+body.admin-categories .admin-categories-table .btn:hover,
+#categoryModal .modal__footer .btn:hover {
+    background: #fff5ea;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+body.admin-categories #btnAddCategory:active,
+body.admin-categories .admin-categories-table .btn:active,
+#categoryModal .modal__footer .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1.5px 3px rgba(0,0,0,0.08);
+}
+
+/* 역할별 텍스트 컬러 (books와 일치) */
+body.admin-categories #btnAddCategory         { color: #9bbf82; } /* 등록 */
+body.admin-categories .admin-categories-table .btnEdit  { color: #87a96b; } /* 수정 */
+body.admin-categories .admin-categories-table .btnDelete{ color: #7a8b6e; } /* 삭제 */
+
+/* 변형 클래스 배경/선 초기화(겹침 방지) */
+body.admin-categories .admin-categories-table .btn.btn-secondary,
+body.admin-categories .admin-categories-table .btn.btn-danger,
+body.admin-categories .admin-categories-table .btn.btn-primary {
+    background: #ffffff;
+    border: 0;
+}
+
+/* 툴바 등록 버튼 */
+body.admin-categories .toolbar #btnAddCategory {
+    background: #fff;
+    border: 0;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+/* =========================
+   5) 모달: 카테고리 등록/수정
+========================= */
+#categoryModal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.35);
+    z-index: 1000;
+    overflow: auto;
+    padding: 4vh 0;
+}
+#categoryModal .modal__dialog {
+    width: min(96%, 720px);
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: var(--elev-2);
+}
+#categoryModal .modal__header,
+#categoryModal .modal__footer {
+    background: #fff;
+    border-bottom: 1px solid var(--color-border);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#categoryModal .modal__footer {
+    border-top: 1px solid var(--color-border);
+    border-bottom: 0;
+    justify-content: flex-end;
+    gap: 8px;
+}
+#categoryModal .modal__form {
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-content: start;
+}
+#categoryModal label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.9rem;
+}
+#categoryModal input[type="text"],
+#categoryModal textarea,
+#categoryModal select {
+    height: 36px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+}
+
+/* 모달 하단 버튼: 유리효과 제거 + 테이블 버튼과 동일 베이스 */
+#categoryModal .modal__footer .btn.btn--liquid-glass,
+#categoryModal .modal__footer .btn.btn--liquid-glass:hover,
+#categoryModal .modal__footer .btn.btn--liquid-glass:active {
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+#categoryModal .modal__footer .btn.btn--liquid-glass::before,
+#categoryModal .modal__footer .btn.btn--liquid-glass::after {
+    content: none;
+}
+
+/* 역할별 텍스트 컬러 매칭(저장/닫기) */
+#categoryModal .modal__footer .save-btn,
+#modalSaveBtn { color: #87a96b; } /* 수정 계열 */
+#categoryModal .modal__footer #modalCancelBtn { color: #7a8b6e; } /* 삭제 계열 */
+
+#categoryModal .modal__footer .btn.btn-secondary,
+#categoryModal .modal__footer .btn.btn-danger,
+#categoryModal .modal__footer .btn.btn-primary {
+    background: #ffffff;
+    border: 0;
+}
+
+/* =========================
+   6) “카테고리 속 책 목록” 읽기 모달(보조)
+   - 현재 HTML 클래스 유지(JS 영향 최소화)
+========================= */
+#booksModal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.35);
+    z-index: 1000;
+    overflow: auto;
+    padding: 4vh 0;
+}
+#booksModal .modal-content {
+    width: min(96%, 1000px);
+    max-height: 86vh;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: var(--elev-2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+}
+#booksModal #booksModalTitle {
+    margin: 0;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-border);
+}
+#booksModal .modal-table-scroll {
+    overflow: auto;
+    padding: 10px 12px;
+}
+#booksModal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--color-border);
+}
+
+/* 읽기 모달 버튼: 테이블 버튼과 동일 톤으로 통일
+   (기존 class 'btn btn-cer-success delete-btn' 유지 가정) */
+#booksModal .modal-footer .btn {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+    color: #7a8b6e; /* 닫기: 삭제 계열 톤과 동일 */
+}
+#booksModal .modal-footer .btn:hover {
+    background: #fff5ea;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+#booksModal .modal-footer .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1.5px 3px rgba(0,0,0,0.08);
+}
+/* 레이아웃: 푸터 하단 고정 & 톤 일치 */
+body.admin-categories {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+body.admin-categories .page {
+    flex: 1 0 auto;
+}
+body.admin-categories .ht-footnote {
+    width: min(92%, 1100px);
+    margin: 24px auto 12px;
+    text-align: center;
+    color: #d4a574; /* books와 동일 톤 */
+    font-size: 12px;
+}
+/* 페이지 컨테이너 자체를 컴팩트하게 (기존 base의 1600px를 이 페이지에서만 덮어쓰기) */
+.admin-categories .page {
+    width: min(96%, 1100px);
+    margin-inline: auto;
+}
+/* 테이블 컬럼 폭 재조정: 4컬럼에 맞춰 더 타이트하게 */
+body.admin-categories .admin-categories-table col.col-id      { width: clamp(56px,  6vw,  72px); }
+body.admin-categories .admin-categories-table col.col-name    { width: clamp(180px, 22vw, 420px); }
+body.admin-categories .admin-categories-table col.col-created { width: clamp(100px, 10vw, 140px); }
+body.admin-categories .admin-categories-table col.col-actions { width: clamp(148px, 12vw, 210px); }
+/* ‘이전/다음’ 비활성 버튼 톤 (aria-disabled="true") */
+body.admin-categories .pagination-toolbar .btn-group > .btn[aria-disabled="true"] {
+    color: #bbb;
+    background: #f7f7f7;
+    pointer-events: none;           /* 클릭 불가 */
+    box-shadow: none;
+    transform: none;
+}
+/* 포커스 가시성 */
+body.admin-categories .pagination-toolbar .btn-group > .btn:focus-visible {
+    outline: 2px solid rgba(0,0,0,0.15);
+    outline-offset: 2px;
+}
+body.admin-categories .pagination-toolbar .btn-group > .btn:hover {
+    background: #f7f7f7;
+}
+body.admin-categories .pagination-toolbar .btn-group > .btn.active,
+body.admin-categories .pagination-toolbar .btn-group > .btn[aria-current="page"] {
+    background: rgba(255,255,255,0.6);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.12);
+    pointer-events: none;
+    color: #111;
+}
+/* === 페이지네이션: 공백/틈 제거 (Books와 동일하게 붙이기) === */
+body.admin-categories .pagination-toolbar .btn-group {
+    display: inline-flex;      /* 공백 노드로 생기는 틈 제거 */
+    align-items: stretch;
+}
+body.admin-categories .pagination-toolbar .btn-group > .btn {
+    border-radius: 0;          /* 그룹 라운드만 적용, 버튼은 각진 형태 */
+    margin: 0;                 /* 혹시 모를 기본 마진 제거 */
+}
+/* 버튼 사이 구분선 유지 (기존 규칙 유지) */
+body.admin-categories .pagination-toolbar .btn-group > .btn + .btn {
+    border-left: 1px solid var(--color-border);
+}
+/* 페이지네이션 텍스트 색상을 Books와 동일하게 고정 */
+body.admin-categories .pagination-toolbar .btn-group > .btn,
+body.admin-categories .pagination-toolbar .btn-group > .btn:visited {
+    color: #111;              /* 기본/방문 상태 모두 검정 */
+    text-decoration: none;    /* 링크 밑줄 제거(혹시 모를 UA 스타일 대비) */
+}
+
+/* =========================
+   7) 반응형
+========================= */
+@media (min-width: 1400px) {
+    body.admin-categories .admin-categories-table col.col-name {
+        width: clamp(260px, 28vw, 600px);
+    }
+}
+/* 넓은 화면에서도 과도하게 퍼지지 않도록 상한 제어 */
+@media (min-width: 1680px) {
+    .admin-categories .page { width: min(92%, 1200px); }
+}

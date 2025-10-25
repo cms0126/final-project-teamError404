@@ -1,0 +1,144 @@
+
+:root {
+    --color-primary: #5A7A4A;     /* 브랜드 메인 텍스트/아이콘 */
+    --color-accent:  #E8C18E;     /* 포인트 보더/뱃지/별점 */
+    --color-accent-2:#D4A574;     /* 액티브/호버 포인트 */
+    --color-leaf:    #87A96B;     /* 버튼 그라데이션 시작 */
+    --color-sage:    #9BBF82;     /* 버튼 그라데이션 끝 */
+    --color-ink:     #7A8B6E;     /* 본문/부제 텍스트 */
+    --color-bg:      #ffffff;     /* 페이지 배경 */
+    --color-cream:   #fef9e7;     /* 강조 박스 배경 */
+    --color-ink-sub: #b3b3b3;     /* 보조 텍스트 */
+    --shadow-green:  0 6px 20px rgba(90,122,74,0.10);
+    --border-green:  rgba(90,122,74,0.05);
+}
+/* 공통 유틸 */
+.text-accent        { color: var(--color-accent) !important; }
+.text-accent-dark   { color: var(--color-primary) !important; }
+.border-accent      { border-color: var(--color-accent) !important; }
+.bg-cream           { background: var(--color-cream) !important; }
+.shadow-green       { box-shadow: var(--shadow-green) !important; }
+
+
+/* 공지사항 2:8 레이아웃 */
+.qna-layout {
+    display: grid;
+    gap: var(--gap-4);
+    grid-template-columns: 1fr; /* 모바일에서는 1단 */
+}
+
+@media (min-width: 768px) {
+    .qna-layout {
+        grid-template-columns: 1.5fr 8.5fr; /* 태블릿 이상 2:8 비율 */
+    }
+}
+/* 사이드바 메뉴 hover */
+aside nav a {
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    transition: background var(--dur) var(--ease);
+    text-align: center;
+    font-weight: 500;
+}
+aside nav a:hover {
+    color: var(--color-leaf);
+    background-color: rgba(135, 169, 107, 0.1); /* --color-leaf의 연한 배경 */
+}
+.text-center {
+    text-align: center;
+}
+
+
+
+
+
+/*오른쪽 공지사항 콘텐츠*/
+.qna-title {
+    font-weight: bold;        /* 강조 */
+    padding-bottom: 0.75rem;   /* 밑줄과 텍스트 사이 간격 */
+    border-bottom: 2px solid #333; /* 밑줄 색상/두께 */
+    margin-bottom: 2rem;      /* 밑줄 아래 여백 */
+}
+.tt{
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+/* 제목, 내용 label 강조 */
+.qna-write label {
+    font-weight: 600;                  /* 글자 굵게 */
+    color: var(--color-accent-dark);   /* 포인트 색상 */
+    display: block;                    /* 블록으로 표시 */
+    margin-bottom: var(--space-2);     /* 아래 간격 */
+}
+
+/* 1) 입력폼 스타일 */
+.form-input, .form-textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    transition: 0.3s;
+
+}
+.form-textarea {
+    line-height: var(--space-5);
+}
+
+.form-input:focus, .form-textarea:focus {
+    border-color: var(--color-accent);
+    outline: none;
+}
+
+/* 2) 텍스트 오른쪽 정렬용 클래스 (등록 버튼 위치) */
+.text-right {
+    text-align: right;
+}
+
+/* 3) 버튼 스타일 재사용 + 강조 */
+.qna-write .btn-main {
+    background-color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+    color: #fff;
+    padding: 0.35rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-weight: bold;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.qna-write .btn-main:hover {
+    background-color: #fff;
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+
+/* 사이드바 박스 */
+.sidebar-box {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 오른쪽 공지사항 콘텐츠 박스 */
+.notice-content-box {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+
+
+
+
+
+
+
+
+

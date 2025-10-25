@@ -1,0 +1,533 @@
+/* ===================================================================
+   Book Detail (도서 상세 전용) — 스코프/충돌 최소화 버전
+   - Bootstrap과의 충돌을 피하기 위해 가능한 한 .book-detail 내부로 스코프
+   - 브레드크럼은 DOM 구조(nav 바로 다음에 article.book-detail) 기준으로 제한
+   - 모달(.modal) 내부는 Bootstrap 그리드 동작 보장(이 페이지에서만)
+=================================================================== */
+
+/* 0) (선택) 브레드크럼/리스트 리셋: nav(경로)가 바로 뒤에 .book-detail이 올 때만 적용 */
+@supports selector(nav:has(+ .book-detail)) {
+    nav:has(+ .book-detail) .list-reset {
+        padding-left: 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+    }
+    nav:has(+ .book-detail) .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #666;
+    }
+    nav:has(+ .book-detail) .breadcrumb a:hover { color: #1d4ed8; }
+}
+/* 구형 브라우저 fallback: 페이지 메인 내 '경로' nav에만 제한 */
+@supports not selector(nav:has(+ .book-detail)) {
+    main.page > nav[aria-label="경로"] .list-reset {
+        padding-left: 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+    }
+    main.page > nav[aria-label="경로"] .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #666;
+    }
+    main.page > nav[aria-label="경로"] .breadcrumb a:hover { color: #1d4ed8; }
+}
+
+/* 1) 상세 레이아웃 프리셋 */
+.book-detail { /* 필요시 페이지 전용 레이아웃 추가 */ }
+
+/* 2) 커버 영역 */
+.book-detail .book-cover {
+    background: #f9f9f9;            /* 밝은 회색 배경 */
+    border: 1px solid #e0e0e0;      /* 연한 회색 라인 */
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+.book-detail .book-cover img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* 3) 가격 영역 */
+.book-detail .price-original {
+    color: #888;                    /* 연한 회색 */
+    text-decoration: line-through;
+}
+.book-detail .price-discount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #222;                    /* 진한 회색/검정 */
+}
+
+/* 4) 배지 (Bootstrap .badge 전역과 충돌 방지: .book-detail 내부로 한정) */
+.book-detail .badge {
+    display: inline-block;
+    line-height: 1;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #e0e0e0;
+    background: #2d6cdf;           /* 파란 배경 */
+    color: #fff;                    /* 흰색 글자 */
+}
+
+/* 5) 해시태그 리스트 */
+.book-detail .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+}
+.book-detail .tag-list li {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #1d4ed8;                 /* 진한 파랑 (#1d4ed8) */
+    background: #dbeafe;            /* 연한 파랑 (#dbeafe) */
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem 0.25rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.book-detail .tag-list li::before {
+    content: "#";
+    position: absolute;
+    left: 0.5rem;
+    color: #1d4ed8;
+    font-weight: 600;
+}
+.book-detail .tag-list li:hover {
+    background: #1d4ed8;
+    color: #fff;
+}
+
+/* 6) 정보 카드 */
+.book-detail .info-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* 7) 추가 정보 테이블풍 레이아웃 */
+.book-detail .meta-grid {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0.5rem;
+}
+.book-detail .meta-grid .label {
+    color: #666;
+}
+@media (max-width: 767px) {
+    .book-detail .meta-grid { grid-template-columns: 1fr; }
+}
+
+/* 8) (중요) 이 페이지의 모달 내부에서는 Bootstrap row 동작을 보장
+   - 공통 CSS의 .row 유틸이 Bootstrap .row를 덮어써 모달 폼이 깨지는 것을 방지 */
+.modal .row{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    margin-right: calc(-.5 * var(--bs-gutter-x)) !important;
+    margin-left:  calc(-.5 * var(--bs-gutter-x)) !important;
+}
+.modal .row > *{
+    padding-right: calc(var(--bs-gutter-x) * .5) !important;
+    padding-left:  calc(var(--bs-gutter-x) * .5) !important;
+}
+.modal .g-3{
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 1rem;
+}
+/* === 버튼 3개 그리드 (모바일 1열 → 태블릿 3열) === */
+.actions-grid{
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 1fr;
+}
+@media (min-width: 768px){
+    .actions-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+.actions-grid > button{ width: 100%; }
+
+/* === 가격 컴포넌트 === */
+.price-box .price-line{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.price-now{
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #111;
+}
+.price-badge{
+    display: inline-block;
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: .25rem .5rem;
+    border-radius: 999px;
+    background: #ef4444; /* 빨강 - 할인 강조 */
+    color: #fff;
+}
+.price-sub{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-top: .25rem;
+    color: #666;
+}
+.price-original{
+    color: #888;
+    text-decoration: line-through;
+}
+.stock-chip{
+    font-size: .75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    padding: .125rem .5rem;
+    background: #f9fafb;
+    color: #333;
+}
+/* ===== 이미지 로딩 스켈레톤 & 호버 ===== */
+.book-cover { position: relative; overflow: hidden; border-radius: 12px; }
+.book-cover img { width: 100%; display: block; opacity: 0; transition: opacity .3s ease, transform .2s ease; }
+.book-cover.loading::before {
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(90deg,#eee 25%,#f5f5f5 37%,#eee 63%);
+    background-size: 400% 100%; animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+.book-cover.loaded img { opacity: 1; }
+@media (hover:hover){ .book-cover:hover img { transform: scale(1.04); } }
+
+/* ===== 수량 스테퍼 & 합계 ===== */
+.qty-stepper { display:inline-flex; align-items:center; gap:4px; border:1px solid var(--border,#e5e7eb); border-radius:10px; padding:2px; background:#fff; }
+.qty-btn { width:32px; height:32px; border:0; background:transparent; font-size:18px; line-height:1; border-radius:8px; }
+.qty-btn:active { transform: translateY(1px); }
+.qty-input { width:56px; text-align:center; border:0; outline:none; font-weight:600; }
+.total-line { margin-left:8px; display:inline-flex; align-items:baseline; gap:8px; }
+.total-line .label { color:var(--muted,#6b7280); }
+.total-line .total { font-size:18px; }
+
+/* ===== details 아코디언 ===== */
+.acc { border:1px solid var(--border,#e5e7eb); border-radius:12px; background:#fff; margin-bottom:10px; overflow:hidden; }
+.acc__sum { cursor:pointer; list-style:none; padding:14px 16px; font-weight:700; }
+.acc[open] .acc__sum { background:#fafafa; }
+.acc__panel { padding:12px 16px 16px; }
+.bullet { margin:0; padding-left:18px; }
+.bullet li { margin:4px 0; }
+
+/* ===== 스크롤 리빌 ===== */
+.reveal { opacity:0; transform: translateY(12px); transition: opacity .4s ease, transform .4s ease; }
+.reveal.is-in { opacity:1; transform:none; }
+
+/* ===== 하단 고정 구매바 ===== */
+.sticky-bar {
+    position: sticky; bottom: 0; inset-inline: 0; display:flex; align-items:center; justify-content:space-between;
+    gap:10px; padding:10px 12px; background:rgba(255,255,255,.96); border-top:1px solid #e5e7eb; backdrop-filter:saturate(180%) blur(8px);
+}
+.sticky-bar[hidden]{ display:none; }
+.sticky-bar__left{ display:flex; flex-direction:column; }
+.sticky-qty{ color:var(--muted,#6b7280); font-size:12px; }
+.sticky-total{ font-size:18px; }
+.btn-ghost,.btn-fill{ height:40px; padding:0 14px; border-radius:10px; font-weight:700; border:1px solid var(--border,#e5e7eb); }
+.btn-ghost{ background:#fff; }
+.btn-fill{ background:var(--accent,#5A7A4A); color:#fff; border-color:var(--accent,#5A7A4A); }
+
+/* ===== 반품/교환 안내 ===== */
+.return-policy h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.policy-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.policy-table th,
+.policy-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+}
+
+.policy-table th {
+    width: 25%;
+    background: #f8f9fa;
+    font-weight: 700;
+    color: #374151;
+}
+
+.policy-table tr:last-child th,
+.policy-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===== Author block ===== */
+.author-section h2 { font-size:20px; font-weight:700; }
+.author-card {
+    display:grid; grid-template-columns: 96px 1fr; gap:16px;
+    background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+}
+.author-photo img { width:96px; height:96px; object-fit:cover; border-radius:10px; }
+.photo-fallback {
+    width:96px; height:96px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    background:#f3f4f6; color:#9ca3af; font-size:12px; border:1px dashed #e5e7eb;
+}
+.author-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.author-name { font-size:18px; font-weight:800; margin:0; }
+.author-actions { display:flex; gap:8px; }
+.btn-ghost.sm { padding:6px 10px; border:1px solid #e5e7eb; border-radius:8px; background:#fff; font-size:12px; font-weight:700; }
+.author-desc { margin-top:6px; line-height:1.7; }
+.author-meta { display:flex; flex-direction:column; gap:4px; margin-top:8px; color:#374151; }
+.author-meta strong { font-weight:700; margin-right:6px; }
+
+/* 같은 작가 도서 그리드 */
+.books-inline { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; }
+@media (min-width:768px){ .books-inline { grid-template-columns:repeat(4,1fr); } }
+.book-mini a { display:block; background:#fff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; padding:8px; }
+.book-mini img { width:100%; height:140px; object-fit:cover; border-radius:8px; }
+.book-mini .t { display:block; margin-top:8px; font-weight:600; font-size:14px; }
+
+/* ==== 포인트 박스 ==== */
+.point-box { display: grid; gap: 8px; }
+.point-line { display: flex; align-items: baseline; gap: 10px; }
+.point-line .label { font-weight: 800; }
+.point-line .muted { color: var(--muted, #6b7280); font-size: 13px; }
+
+.point-more summary { cursor: pointer; font-weight: 700; margin-top: 4px; }
+.tier-table { width: 100%; border-collapse: collapse; margin-top: 8px; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+.tier-table th, .tier-table td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+.tier-table thead th { background: #f8f9fa; font-weight: 800; }
+.tier-table tr:last-child td { border-bottom: 0; }
+.tiny-note { margin-top: 8px; color: #6b7280; font-size: 12px; }
+
+/* sticky bar 적립표시 */
+.sticky-earn { color: var(--muted, #6b7280); font-size: 12px; margin-top: 2px; }
+
+/* ==== StickyBar: 화면 하단 고정 ==== */
+.sticky-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid #e5e7eb;
+}
+
+.sticky-bar[hidden] {
+    display: none !important;
+}
+
+/* 본문이 stickyBar와 겹치지 않도록 전체 여백 추가 */
+.has-sticky-bottom #main,
+.has-sticky-bottom body {
+    padding-bottom: 80px;
+}
+
+/* 리뷰 구역 */
+.review-section {
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.review-section .section-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 16px;
+}
+
+.rating-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rating-stars {
+    font-size: 20px;
+    color: #facc15;
+}
+
+.rating-score strong {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.rating-count {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.short-reviews {
+    margin-top: 16px;
+    display: grid;
+    gap: 8px;
+}
+
+.review-card {
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn-more {
+    font-size: 14px;
+    color: #2563eb;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* ==== 통계 섹션 (알라딘 스타일) ==== */
+.stats-section { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:20px; }
+.stats-grid { display:grid; gap:20px; grid-template-columns: 1fr; }
+@media (min-width: 992px){ .stats-grid { grid-template-columns: 1fr 1fr; } }
+
+.dist-card { padding:12px 8px; }
+.dist-title { font-weight:800; margin-bottom:12px; }
+
+.rating-head { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.rating-stars { color:#f43f8c; letter-spacing:2px; }
+.rating-stars.lg { font-size:20px; }
+.rating-avg { font-size:24px; font-weight:800; color:#f43f8c; }
+
+.bar-row { display:grid; grid-template-columns: 52px 1fr 54px; gap:10px; align-items:center; margin:8px 0; }
+.bar-label { color:#6b7280; font-size:13px; text-align:left; }
+.bar-val { color:#6b7280; font-size:13px; text-align:right; }
+
+.bar-track { position:relative; height:12px; background:#eee; border-radius:999px; overflow:hidden; }
+.bar-fill { position:absolute; left:0; top:0; bottom:0; width:0; background:#f43f8c; border-radius:999px; transition:width .9s ease; }
+
+.tiny-note { color:#6b7280; font-size:12px; }
+
+/* ================= Book Detail =================
+   - 절제된 가을톤, 낙엽 애니메이션 없음
+   - .bd- 접두로 스코프
+================================================= */
+
+:root{
+    --bd-bg:#faf7f3;
+    --bd-surface:#ffffff;
+    --bd-border:#e9e5de;
+    --bd-text:#2b2f33;
+    --bd-muted:#6f757b;
+    --bd-accent:#6f835d;   /* 세이지 그린 */
+    --bd-accent-2:#b7815c; /* 소프트 브라운 */
+    --bd-danger:#b45757;
+}
+
+.page{ background:var(--bd-bg); }
+
+/* 레이아웃 */
+.bd-wrap{ max-width:1100px; margin:0 auto; }
+.book-detail{ display:grid; grid-template-columns:1fr; gap:16px; background:var(--bd-surface); border:1px solid var(--bd-border); border-radius:14px; padding:18px; }
+@media (min-width:768px){ .book-detail{ grid-template-columns: 1fr 1fr; gap:22px; } }
+
+/* 커버 */
+.book-detail .book-cover{ border:1px solid var(--bd-border); border-radius:10px; overflow:hidden; background:#f6f6f6; }
+.book-detail .book-cover img{ width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; display:block; transition:transform .18s ease; }
+@media (hover:hover){ .book-detail .book-cover:hover img{ transform:scale(1.03); } }
+
+/* 타이틀 */
+.book-detail h1{ font-size:22px; font-weight:800; margin:0 0 4px; color:var(--bd-text); }
+.book-detail .surface{ color:var(--bd-muted); }
+
+/* 가격 */
+.price-box{ border:1px solid var(--bd-border); border-radius:12px; background:#fff; padding:12px; }
+.price-line{ display:flex; align-items:center; gap:8px; }
+.price-now{ font-size:22px; font-weight:900; color:#1f2937; }
+.price-badge{ font-size:12px; font-weight:800; color:#fff; background:var(--bd-danger); padding:4px 8px; border-radius:999px; }
+.price-sub{ display:flex; align-items:center; gap:10px; color:var(--bd-muted); margin-top:6px; }
+.price-original{ text-decoration:line-through; color:#9aa0a6; }
+.stock-chip{ font-size:12px; border:1px solid var(--bd-border); padding:2px 8px; border-radius:999px; background:#fafafa; }
+
+/* 수량/합계 */
+.qty-price{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.qty-stepper{ display:inline-flex; align-items:center; gap:4px; border:1px solid var(--bd-border); border-radius:10px; padding:2px; background:#fff; }
+.qty-btn{ width:32px; height:32px; border:0; background:#fff; border-radius:8px; font-size:18px; }
+.qty-input{ width:56px; text-align:center; border:0; outline:none; font-weight:700; }
+.total-line .label{ color:var(--bd-muted); }
+.total-line .total{ font-weight:900; }
+
+/* 액션 */
+.actions-grid{ display:grid; gap:8px; grid-template-columns:1fr; }
+@media (min-width:768px){ .actions-grid{ grid-template-columns:repeat(3,1fr); } }
+.actions-grid button{ width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--bd-border); background:#fff; font-weight:800; }
+.actions-grid .bg-accent{ background:var(--bd-accent); color:#fff; border-color:var(--bd-accent); }
+
+/* 태그 */
+.tag-list{ display:flex; flex-wrap:wrap; gap:8px; padding:0; margin:0; list-style:none; }
+.tag-list li{ background:#efe9e1; color:#5a4a3d; border:1px solid #e2d7c9; border-radius:999px; padding:4px 10px; font-size:12px; }
+
+/* 아코디언 */
+.acc{ border:1px solid var(--bd-border); border-radius:12px; background:#fff; margin-bottom:10px; overflow:hidden; }
+.acc__sum{ cursor:pointer; padding:14px 16px; font-weight:800; }
+.acc[open] .acc__sum{ background:#faf9f5; }
+.acc__panel{ padding:12px 16px 16px; }
+
+/* 리뷰/통계(간략) */
+.review-section, .stats-section {
+    background:#fff; border:1px solid var(--bd-border); border-radius:12px; padding:16px;
+}
+.rating-stars{ color:#d4b26c; letter-spacing:2px; }
+
+/* 하단 구매바 */
+.sticky-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:9999;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.95); backdrop-filter:blur(6px);
+    border-top:1px solid var(--bd-border);
+}
+.sticky-bar[hidden]{ display:none !important; }
+.sticky-bar__left{ display:flex; flex-direction:column; }
+.sticky-qty{ color:var(--bd-muted); font-size:12px; }
+.sticky-total{ font-size:18px; font-weight:900; }
+.btn-ghost,.btn-fill{ height:40px; padding:0 14px; border-radius:10px; font-weight:800; border:1px solid var(--bd-border); }
+.btn-fill{ background:var(--bd-accent); color:#fff; border-color:var(--bd-accent); }
+
+/* 미세 인터랙션 */
+@keyframes reveal { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+.reveal{ animation:reveal .45s ease both; }
+
+
+
+
+/* ===== 반응형 그리드 보완(모바일 퍼스트) ===== */
+.book-detail{ display:grid; grid-template-columns:1fr; gap:16px; }
+@media (min-width:768px){ .book-detail{ grid-template-columns:1fr 1fr; gap:24px; } }
+
+/* ===== 미세 인터랙션 ===== */
+@keyframes wiggle { 0%{transform:rotate(0)} 25%{transform:rotate(-8deg)} 50%{transform:rotate(0)} 75%{transform:rotate(6deg)} 100%{transform:rotate(0)} }
+#btnWishlist.wiggle { animation: wiggle .5s ease; }

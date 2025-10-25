@@ -1,0 +1,97 @@
+/* 잔잔한 밤 감성 무드 레이어 */
+#mood-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;   /* 클릭 막지 않음 */
+    z-index: 0;             /* 맨 뒷면 */
+    transform: translate3d(0,0,0);
+    will-change: transform;
+}
+
+/* 레이어용 캔버스 */
+#mood-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: .9;            /* 아주 살짝 은은하게 */
+}
+
+/* 콘텐츠가 무드 레이어 위에 오도록 (기존 마크업 변경 없이) */
+body > header,
+body > .page,
+body > footer,
+body > .page-wrapper { /* 혹시 외부 레이아웃 쓰면 대비 */
+    position: relative;
+    z-index: 1;
+}
+
+/* 모션 민감 사용자 배려 */
+@media (prefers-reduced-motion: reduce) {
+    #mood-layer { display: none !important; }
+}
+
+/* ===== Lunar cycle: 초승달 → 보름달 → 그믐달 ===== */
+
+/* 달 본체: 부드러운 달빛 + 약한 외곽 글로우 */
+.moon-divider .moon{
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    width: 28px;
+    height: 28px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%,
+    #fff7d6 0%, #ffe8b0 38%, #ffd98a 60%, #ffd98a00 70%);
+    filter: drop-shadow(0 0 6px rgba(255, 234, 170, .35));
+    opacity: .95;
+}
+
+/* 달 그림자: 어두운 원이 좌→우로 지나가며 위상(phase) 연출 */
+.moon-divider .moon::after{
+    content: "";
+    position: absolute;
+    inset: 0;                 /* 달과 같은 크기 */
+    border-radius: 50%;
+    /* 살짝 반투명한 밤색 원(가림막). 중앙부가 더 진해서 입체감 */
+    background: radial-gradient(circle at 50% 50%,
+    rgba(12,18,30,.85) 62%, rgba(12,18,30,.00) 63%);
+    mix-blend-mode: multiply;  /* 배경과 자연스럽게 섞임 */
+    filter: blur(.2px);
+    transform: translateX(-120%);        /* 화면 왼쪽 바깥에서 시작(초승) */
+    animation: lunar-cycle 18s ease-in-out infinite;
+}
+
+/* 배경 그라데이션 흐름(이미 쓰고 있다면 유지) */
+@keyframes md-bg{
+    0%   { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* 별 도트가 서서히 드리프트(이미 쓰고 있다면 유지) */
+@keyframes md-stars-1{
+    0%   { background-position: 0 0, 90px 40px; }
+    100% { background-position: 300px 0, 90px 40px; }
+}
+@keyframes md-stars-2{
+    0%   { background-position: 0 0, 90px 40px; }
+    100% { background-position: 0 0, 390px 40px; }
+}
+
+/* 달 위상 애니메이션
+   -120% (달 왼쪽 바깥, 초승) → +120% (달 오른쪽 바깥, 그믐)
+   중간에 그림자가 완전히 벗어나는 순간(보름달)이 잠깐 지나감 */
+@keyframes lunar-cycle{
+    0%   { transform: translateX(-120%); opacity: .9; }
+    20%  { transform: translateX(-60%);  opacity: .9; }   /* 초승 → 상현 */
+    35%  { transform: translateX(-20%);  opacity: .85; }
+    50%  { transform: translateX(  0%);  opacity: .0; }    /* 보름달 (그림자 거의 사라짐) */
+    65%  { transform: translateX( 20%);  opacity: .85; }
+    80%  { transform: translateX( 60%);  opacity: .9; }    /* 하현 */
+    100% { transform: translateX(120%);  opacity: .9; }    /* 그믐 */
+}
+
+/* 모션 민감 사용자 배려 */
+@media (prefers-reduced-motion: reduce){
+    .moon-divider .moon::after{ animation: none; }
+}

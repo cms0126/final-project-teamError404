@@ -1,0 +1,156 @@
+/* find-id.css — palette-aware version
+   1) 먼저 '팔레트 브릿지 변수'를 정의한다.
+   2) 공통 CSS(00_common.css)에 이미 있는 변수/토큰이 있으면 그 이름을 var() 첫 번째 인자로 매핑해줘.
+   3) 공통 변수 없으면 두 번째 인자의 기본값이 자동 사용됨.  */
+
+/* ===== 1) 팔레트 브릿지 변수 ===== */
+:root{
+    /* 배경/표면/텍스트 */
+    --bg:                var(--app-bg, #f6f8fc);
+    --card:              var(--surface, #ffffff);
+    --text:              var(--text-900, #111827);
+    --muted:             var(--text-500, #6b7280);
+    --line:              var(--border, #e5e7eb);
+
+    /* 포커스/브랜드(기본 버튼) */
+    --ring:              var(--brand-500, #2563eb);
+    --primary:           var(--brand-900, #0f172a);
+    --primary-contrast:  var(--on-brand, #ffffff);
+
+    /* 상태색 */
+    --success:           var(--success-700, #166534);
+    --success-bg:        var(--success-50, #ecfdf5);
+    --danger:            var(--danger-700, #b91c1c);
+    --danger-bg:         var(--danger-50, #fef2f2);
+
+    /* 소셜 색 (필요시 공통 변수로 매핑 가능) */
+    --kakao:             var(--social-kakao, #FEE500);
+    --naver:             var(--social-naver, #03C75A);
+    --google:            var(--social-google, #ffffff);
+}
+
+/* ===== 2) 레이아웃 ===== */
+.findid-wrapper{
+    min-height:calc(100vh - 40px);
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bg);
+    padding:24px;
+}
+.findid-card{
+    width:100%; max-width:620px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(17,24,39,.08);
+    padding:28px 28px 22px;
+}
+
+/* ===== 3) 타이틀 ===== */
+.findid-title{
+    margin:0 0 18px;
+    font-size:22px; line-height:1.25; font-weight:800;
+    letter-spacing:-.01em; color:var(--text);
+}
+
+/* ===== 4) 폼 ===== */
+.findid-form .row{ margin-bottom:14px; }
+.findid-form label{
+    display:block; font-size:13px; color:var(--muted);
+    margin:0 0 6px 2px;
+}
+.findid-form input[type="text"],
+.findid-form input[type="email"]{
+    width:100%;
+    height:46px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:#fff;
+    padding:0 14px;
+    font-size:15px; color:var(--text);
+    transition:border-color .15s ease, box-shadow .15s ease, background .2s;
+}
+.findid-form input:focus{
+    outline:0;
+    border-color:var(--ring);
+    box-shadow:0 0 0 4px color-mix(in srgb, var(--ring) 24%, transparent);
+}
+
+/* ===== 5) 액션 영역 & 버튼 ===== */
+.findid-actions{
+    display:flex; gap:10px; flex-wrap:wrap;
+    justify-content:flex-end;
+    margin:12px 0 4px;
+}
+
+.findid-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    height:42px; padding:0 16px;
+    border-radius:10px; border:1px solid transparent;
+    font-weight:700; font-size:14px; text-decoration:none;
+    transition:transform .04s ease, box-shadow .15s ease, background .2s, border-color .2s, filter .15s;
+    user-select:none; cursor:pointer;
+}
+.findid-btn:active{ transform:translateY(1px); }
+
+.findid-btn.primary{
+    background:var(--primary); color:var(--primary-contrast);
+    box-shadow:0 6px 16px rgba(15,23,42,.15);
+}
+.findid-btn.primary:hover{ filter:brightness(1.03); }
+
+.findid-btn.ghost{
+    background:#fff; color:var(--text);
+    border-color:var(--line);
+}
+.findid-btn.ghost:hover{ background:#f9fafb; }
+
+/* 소셜 버튼 */
+.findid-btn.kakao{ background:var(--kakao); color:#191919; }
+.findid-btn.kakao:hover{ filter:brightness(.98); }
+
+.findid-btn.naver{ background:var(--naver); color:#fff; }
+.findid-btn.naver:hover{ filter:brightness(1.03); }
+
+.findid-btn.google{
+    background:var(--google); color:#111; border-color:var(--line);
+}
+.findid-btn.google:hover{ background:#f9fafb; }
+
+/* ===== 6) 결과/에러 ===== */
+.findid-result{
+    margin-top:16px;
+    padding:14px 16px;
+    border:1px solid color-mix(in srgb, var(--success) 25%, white);
+    background:var(--success-bg);
+    border-radius:12px;
+    color:var(--success);
+}
+.findid-result p{ margin:0 0 8px; }
+.findid-result strong{ letter-spacing:.02em; }
+
+.findid-error{
+    margin-top:16px;
+    padding:12px 14px;
+    border:1px solid color-mix(in srgb, var(--danger) 25%, white);
+    background:var(--danger-bg);
+    border-radius:12px;
+    color:var(--danger);
+}
+
+/* 제공자 뱃지 (선택) */
+.provider-pill{
+    display:inline-block; margin-left:6px;
+    padding:3px 8px; border-radius:999px;
+    font-size:12px; font-weight:700;
+    border:1px solid var(--line); color:#374151; background:#fff;
+}
+.provider-pill.kakao{ background:color-mix(in srgb, var(--kakao) 35%, white); }
+.provider-pill.naver{ background:color-mix(in srgb, var(--naver) 20%, white); color:#065f46; }
+.provider-pill.google{ background:#f3f4f6; }
+
+/* 반응형 */
+@media (min-width: 560px){
+    .findid-form .row{
+        display:grid; grid-template-columns:120px 1fr; align-items:center; gap:16px;
+    }
+}

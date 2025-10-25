@@ -1,0 +1,69 @@
+/* Footer 기술 스택 애니메이션 정의 */
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tech-stack-animate p {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeSlideUp 1.2s var(--ease) forwards;
+}
+
+/* 순차적으로 지연 시간 부여 */
+.tech-stack-animate p:nth-child(1) { animation-delay: 0.2s; }
+.tech-stack-animate p:nth-child(2) { animation-delay: 0.4s; }
+.tech-stack-animate p:nth-child(3) { animation-delay: 0.6s; }
+.tech-stack-animate p:nth-child(4) { animation-delay: 0.8s; }
+.tech-stack-animate p:nth-child(5) { animation-delay: 1s; }
+
+/* 팀원 + 저작권 + GitHub 순차 애니메이션 */
+.team-leader {
+    text-align: right;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, auto); /* 3열 */
+    gap: 0.5rem 1.5rem;
+    justify-content: end;  /* 👉 오른쪽 끝으로 정렬 */
+    text-align: right;     /* 👉 이름도 우측 정렬 */
+    font-weight: bold;
+}
+
+.team-grid p {
+    margin: 0;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeSlideUp 1.2s var(--ease) forwards;
+}
+
+.team-grid p:nth-child(1) { animation-delay: 0.2s; }
+.team-grid p:nth-child(2) { animation-delay: 0.4s; }
+.team-grid p:nth-child(3) { animation-delay: 0.6s; }
+.team-grid p:nth-child(4) { animation-delay: 0.8s; }
+.team-grid p:nth-child(5) { animation-delay: 1.0s; }
+.team-grid p:nth-child(6) { animation-delay: 1.2s; }
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.github-badge {
+    display: inline-block;
+    animation: pulse 2s infinite;
+}
+
+.github-badge img {
+    transform: scale(1.4);   /* 1.4배 확대 */
+    transform-origin: center;
+}

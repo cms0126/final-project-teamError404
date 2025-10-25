@@ -1,0 +1,435 @@
+/* admin_books.css — Books 전용 최소 오버라이드 (Authors 디자인 이식)
+   - 범위: body.admin-books 이하로만 영향
+   - !important 미사용, 기존 JS/HTML 수정 불필요
+*/
+
+/* =========================
+   1) 검색 버튼: 블랙 고정
+========================= */
+body.admin-books .search-form .btn-search {
+    background: #111;
+    color: #fff;
+    border-left: 1px solid var(--color-border);
+}
+body.admin-books .search-form .btn-search:hover { opacity: 0.92; }
+body.admin-books .search-form .btn-search:active { opacity: 0.86; }
+
+/* =========================
+   2) 테이블 레이아웃/컬럼폭
+========================= */
+body.admin-books .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+body.admin-books .admin-books-table {
+    table-layout: auto;
+    width: 100%;
+    min-width: 100%;
+}
+
+/* 2-2) 컬럼 최소폭을 한 단계 더 타이트하게 */
+body.admin-books .admin-books-table col.col-id        { width: clamp(54px,  4vw, 70px); }
+body.admin-books .admin-books-table col.col-title     { width: clamp(120px, 15vw, 240px); } /* 2줄 래핑 유지 */
+body.admin-books .admin-books-table col.col-img       { width: clamp(48px,  6vw, 84px); }
+body.admin-books .admin-books-table col.col-isbn      { width: clamp(88px,  9vw, 130px); }
+body.admin-books .admin-books-table col.col-author    { width: clamp(92px,  8vw, 130px); }
+body.admin-books .admin-books-table col.col-publisher { width: clamp(98px,  9vw, 140px); }
+body.admin-books .admin-books-table col.col-category  { width: clamp(98px,  9vw, 140px); }
+body.admin-books .admin-books-table col.col-price     { width: clamp(74px,  6vw, 92px); }
+body.admin-books .admin-books-table col.col-discount  { width: clamp(74px,  6vw, 92px); }
+body.admin-books .admin-books-table col.col-stock     { width: clamp(66px,  5.5vw, 86px); }
+body.admin-books .admin-books-table col.col-order     { width: clamp(70px,  6vw, 92px); }
+body.admin-books .admin-books-table col.col-wish      { width: clamp(70px,  6vw, 92px); }
+body.admin-books .admin-books-table col.col-created   { width: clamp(92px,  9vw, 124px); }
+/* actions 최소폭도 축소 (한 줄 유지) */
+body.admin-books .admin-books-table col.col-actions   { width: clamp(188px, 15vw, 260px); } /* 210px → 188px */
+/* 행 호버(베이스와 톤 맞춤) */
+body.admin-books .admin-books-table tbody tr:hover { background: #f6f6f6; }
+
+/* 제목 말줄임(한 줄) */
+body.admin-books .title-ellipsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;       /* 2줄까지만 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: normal;         /* 한 줄 고정 해제 */
+}
+
+/* 썸네일 */
+body.admin-books .book-thumb {
+    width: 46px;
+    height: 46px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background: #f7f7f7;
+    display: block;
+    margin-inline: auto;
+}
+
+/* ISBN 고정폭 폰트 */
+body.admin-books .isbn-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.9rem;
+}
+
+/* 재고 뱃지 */
+body.admin-books .stock-chip {
+    display: inline-block;
+    min-width: 44px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+body.admin-books .stock-chip.ok  { color: #4b8f4b; }  /* 재고 있음 */
+body.admin-books .stock-chip.out { color: #a06060; }  /* 품절 */
+
+/* 테이블 버튼 간격 */
+body.admin-books .admin-books-table .btn + .btn { margin-left: 8px; }
+
+/* =========================
+   3) 버튼(툴바/테이블/모달): 플랫 톤
+   - Authors 이식: 글래스 효과 제거 + 역할별 텍스트 컬러
+========================= */
+
+/* toolbar/테이블 영역에서 '유리 오버레이' 제거 */
+body.admin-books .toolbar .btn--liquid-glass::before,
+body.admin-books .toolbar .btn--liquid-glass::after,
+body.admin-books .table-scroll .btn--liquid-glass::before,
+body.admin-books .table-scroll .btn--liquid-glass::after {
+    content: none;
+}
+
+/* 공통 베이스 */
+body.admin-books #btnAddBook,
+body.admin-books .admin-books-table .btn,
+#bookModal .modal__footer .btn {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 12px;
+    background: #ffffff; /* 플랫 */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+/* 역할별 텍스트 색 (Authors와 동일 계열) */
+body.admin-books #btnAddBook           { color: #9bbf82; } /* 등록 */
+body.admin-books .admin-books-table .btnView  { color: #6f9155; } /* 상세 */
+body.admin-books .admin-books-table .btnEdit  { color: #87a96b; } /* 수정 */
+body.admin-books .admin-books-table .btnDelete{ color: #7a8b6e; } /* 삭제 */
+#bookModal .save-btn                    { color: #87a96b; } /* 저장 */
+#bookModal #btnCancel                   { color: #7a8b6e; } /* 닫기 */
+
+/* 기존 변형 클래스의 배경/선 초기화(겹침 방지) */
+body.admin-books .admin-books-table .btn.btn-secondary,
+body.admin-books .admin-books-table .btn.btn-primary,
+body.admin-books .admin-books-table .btn.btn-danger {
+    background: #ffffff;
+    border: 0;
+}
+
+/* 등록 버튼(툴바) 플랫 톤 */
+body.admin-books .toolbar #btnAddBook {
+    background: #fff;
+    border: 0;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+body.admin-books .toolbar #btnAddBook:hover  { background: #fff5ea; }
+body.admin-books .toolbar #btnAddBook:active { transform: translateY(0); }
+
+/* =========================
+   4) 페이징: 화이트 바탕 + 블랙 텍스트
+========================= */
+body.admin-books .pagination-toolbar .btn-group {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+body.admin-books .pagination-toolbar .btn-group > .btn {
+    box-shadow: none;
+    background: #fff;
+    color: #111;
+    border: 0;
+    height: 44px;
+    line-height: 44px;
+    min-width: 50px;
+    padding: 0 14px;
+    font-weight: 600;
+}
+body.admin-books .pagination-toolbar .btn-group > .btn + .btn {
+    border-left: 1px solid var(--color-border);
+}
+body.admin-books .pagination-toolbar .btn-group > .btn:hover {
+    background: #f7f7f7;
+}
+body.admin-books .pagination-toolbar .btn-group > .btn.active,
+body.admin-books .pagination-toolbar .btn-group > .btn[aria-current="page"] {
+    background: rgba(255,255,255,0.6);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.12);
+    pointer-events: none;
+}
+
+/* =========================
+   5) 모달: 폼 그리드/미리보기
+========================= */
+#bookModal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.35);
+    z-index: 1000;
+    overflow: auto;
+    padding: 4vh 0;
+}
+#bookModal .modal__dialog {
+    width: min(96%, 1000px);
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: var(--elev-2);
+}
+#bookModal .modal__header,
+#bookModal .modal__footer {
+    background: #fff;
+    border-bottom: 1px solid var(--color-border);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#bookModal .modal__footer {
+    border-top: 1px solid var(--color-border);
+    border-bottom: 0;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* 폼 그리드 (책 필드가 많아 2컬럼) */
+#bookModal .form-grid {
+    flex: 1 1 auto;
+    overflow: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 14px;
+    align-content: start;
+}
+#bookModal .form-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.9rem;
+}
+#bookModal input[type="text"],
+#bookModal input[type="number"],
+#bookModal select,
+#bookModal textarea {
+    height: 36px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+}
+#bookModal textarea {
+    min-height: 100px;
+    height: auto;
+    resize: vertical;
+}
+
+/* 이미지 미리보기 */
+#bookModal #imgPreviewWrapper {
+    grid-column: 1 / -1;
+}
+#bookModal #imgPreview {
+    max-width: 100%;
+    max-height: 320px;
+    object-fit: contain;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: #f7f7f7;
+    display: block;
+}
+
+/* 모달 하단 버튼 (유리효과 제거) */
+#bookModal .modal__footer .btn.btn--liquid-glass,
+#bookModal .modal__footer .btn.btn--liquid-glass:hover,
+#bookModal .modal__footer .btn.btn--liquid-glass:active {
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+#bookModal .modal__footer .btn.btn--liquid-glass::before,
+#bookModal .modal__footer .btn.btn--liquid-glass::after {
+    content: none;
+}
+
+/* =========================
+   6) 레이아웃(푸터 하단 정렬)
+========================= */
+body.admin-books {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+body.admin-books .page { flex: 1 0 auto; }
+body.admin-books .ht-footnote {
+    width: min(92%, 1280px);
+    margin: 24px auto 12px;
+    text-align: center;
+    color: #d4a574;
+    font-size: 12px;
+}
+
+/* =========================
+   7) 반응형 & 헬퍼
+========================= */
+/* === 2-6) 넓은 화면에서는 여유 있게 (옵션) === */
+@media (min-width: 1400px) {
+    body.admin-books .admin-books-table col.col-title { width: clamp(180px, 20vw, 300px); }
+}
+
+/* 데스크톱에서도 살짝만 좁아지면 부가 컬럼을 먼저 감춤 */
+@media (max-width: 1360px) {
+    body.admin-books .hide-lg { display: none; } /* 출판사/카테고리/할인가/생성일 등 */
+}
+
+/* 더 좁아지면 ISBN도 감춤(핵심 탐색성 우선: 제목/저자/가격/재고/주문/찜/작업 유지) */
+@media (max-width: 1180px) {
+    body.admin-books .hide-md { display: none; } /* ISBN */
+}
+
+/* hide-classes 지원 */
+@media (max-width: 1100px) {
+    body.admin-books .hide-lg { display: none; }
+}
+@media (max-width: 860px) {
+    body.admin-books .hide-md { display: none; }
+}
+
+/* 그리드 단일 컬럼 전환 */
+@media (max-width: 760px) {
+    #bookModal .modal__dialog { width: min(96%, 720px); max-height: 88vh; }
+    #bookModal .form-grid { grid-template-columns: 1fr; }
+    #bookModal #imgPreview { max-height: 260px; }
+}
+
+/* 테이블 카드 그림자 톤(Authors와 동일) */
+body.admin-books .table-scroll {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* === 2-4) 수치/짧은 컬럼은 한 줄 유지로 가독성 확보 === */
+body.admin-books .isbn-mono,
+body.admin-books td.t-right,
+body.admin-books .stock-chip {
+    white-space: nowrap;
+}
+
+/* --- ACTIONS 셀: 버튼을 flex 한 줄로 고정 --- */
+body.admin-books .admin-books-table td:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;           /* 버튼 간 여백 */
+    flex-wrap: nowrap;  /* ✅ 줄바꿈 금지 */
+    white-space: nowrap;/* ✅ 텍스트 줄바꿈 금지 */
+    overflow: visible;
+}
+
+/* 긴 텍스트는 줄바꿈 허용(제목 등) */
+body.admin-books .t-left,
+body.admin-books .title-ellipsis {
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* 제목 2줄까지만(가로폭 부족 시 세로로 자연스럽게 확장) */
+body.admin-books .title-ellipsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 작업 셀: 테이블 기본 흐름으로 되돌려 전체 행과 세로 정렬 일치 */
+body.admin-books .admin-books-table td:last-child {
+    display: table-cell;       /* ← flex 해제 */
+    white-space: nowrap;       /* 한 줄 유지 */
+    text-align: center;
+    vertical-align: middle;    /* 행 기준 세로 중앙 */
+    padding-top: 0.45rem;      /* 다른 셀과 동일 패딩 */
+    padding-bottom: 0.45rem;
+    overflow: visible;         /* 버튼 그림자 보존 */
+}
+
+/* 버튼은 한 줄을 유지하도록 크기/패딩 소폭 축소 */
+body.admin-books .admin-books-table td:last-child .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    line-height: 28px;
+    padding: 0 8px;           /* 컴팩트 */
+    font-size: 0.86rem;
+    vertical-align: middle;    /* 인라인 요소끼리 세로 중앙 기준 맞춤 */
+}
+
+/* 버튼 간격(한 줄 고정) */
+body.admin-books .admin-books-table td:last-child .btn + .btn {
+    margin-left: 8px;
+}
+
+/* 표 전체 데이터 셀 세로 중앙 보증 */
+body.admin-books .admin-books-table td,
+body.admin-books .admin-books-table th {
+    vertical-align: middle;
+}
+
+/* 아이콘/뱃지류도 한 줄 요소 기준 중앙 */
+body.admin-books .admin-books-table .book-thumb,
+body.admin-books .admin-books-table .stock-chip {
+    vertical-align: middle;
+}
+/* 테이블 패딩/폰트 더 컴팩트 (books 범위만) */
+body.admin-books .admin-table th,
+body.admin-books .admin-table td {
+    padding: 0.40rem 0.56rem;  /* 0.45rem → 0.40rem */
+    font-size: 0.86rem;        /* 0.88rem → 0.86rem */
+    vertical-align: middle;
+}
+/* 글자 줄바꿈 허용 범위 확대(폭 절약) */
+body.admin-books td.t-left,
+body.admin-books .title-ellipsis {
+    white-space: normal;
+    word-break: break-word;
+}
+/* Hover/Active (통일: 테이블 버튼과 동일 톤) */
+body.admin-books #btnAddBook:hover,
+body.admin-books .admin-books-table .btn:hover,
+#bookModal .modal__footer .btn:hover {
+    background: #f6f7f8;      /* ← 주황(#fff5ea) 제거 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+body.admin-books #btnAddBook:active,
+body.admin-books .admin-books-table .btn:active,
+#bookModal .modal__footer .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1.5px 3px rgba(0,0,0,0.08);
+}
